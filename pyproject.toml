@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "poltergeist"
+version = "0.1.0"
+description = ""
+authors = ["Alexander Malyga <alexander@malyga.io>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/alexandermalyga/poltergeist"
+repository = "https://github.com/alexandermalyga/poltergeist"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+mypy = "^0.991"
+black = "^22.10.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
