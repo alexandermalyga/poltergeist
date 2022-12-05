@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "poltergeist"
 version = "0.1.0"
-description = ""
+description = "Experimental Rust-like error handling in Python"
 authors = ["Alexander Malyga <alexander@malyga.io>"]
 license = "MIT"
 readme = "README.md"
