@@ -1,6 +1,8 @@
+import functools
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Callable, Generic, ParamSpec, TypeVar
 
+P = ParamSpec("P")
 T = TypeVar("T")
 E = TypeVar("E", bound=BaseException)
 
@@ -22,3 +24,20 @@ class Err(Generic[T, E]):
 
 
 Result = Ok[T, E] | Err[T, E]
+
+
+def poltergeist(
+    func: Callable[P, T] | None = None, /, *, error: E = Exception
+) -> Callable[P, Result]:
+    if func is None:
+        # Means this was called as @poltergeist() with parenthesis
+        return functools.partial(poltergeist, error=error)  # type: ignore
+
+    @functools.wraps(func)
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result:
+        try:
+            return Ok(func(*args, **kwargs))
+        except error as e:
+            return Err(e)
+
+    return wrapper
