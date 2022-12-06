@@ -1,6 +1,6 @@
 import functools
 from dataclasses import dataclass
-from typing import Callable, Generic, ParamSpec, TypeVar
+from typing import Callable, Generic, NoReturn, ParamSpec, TypeVar
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -14,6 +14,9 @@ class Ok(Generic[T, E]):
     def __repr__(self) -> str:
         return f"Ok({repr(self._value)})"
 
+    def unwrap(self) -> T:
+        return self._value
+
 
 @dataclass(repr=False, frozen=True, slots=True)
 class Err(Generic[T, E]):
@@ -21,6 +24,9 @@ class Err(Generic[T, E]):
 
     def __repr__(self) -> str:
         return f"Err({repr(self._err)})"
+
+    def unwrap(self) -> NoReturn:
+        raise self._err
 
 
 Result = Ok[T, E] | Err[T, E]
