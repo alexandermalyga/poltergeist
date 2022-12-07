@@ -1,6 +1,6 @@
 import functools
 from dataclasses import dataclass
-from typing import Callable, Generic, NoReturn, ParamSpec, TypeVar
+from typing import Callable, Generic, NoReturn, ParamSpec, Type, TypeVar
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -33,16 +33,23 @@ Result = Ok[T, E] | Err[T, E]
 
 
 def poltergeist(
-    func: Callable[P, T]
-) -> Callable[P, Ok[T, Exception] | Err[T, Exception]]:
-    @functools.wraps(func)
-    def wrapper(
-        *args: P.args, **kwargs: P.kwargs
-    ) -> Ok[T, Exception] | Err[T, Exception]:
-        try:
-            result = func(*args, **kwargs)
-        except Exception as e:
-            return Err(e)
-        return Ok(result)
+    error: Type[E],
+) -> Callable[[Callable[P, T]], Callable[P, Ok[T, E] | Err[T, E]]]:
+    """
+    Decorator that wraps the result of a function into an Ok object if it
+    executes without raising an exception. Otherwise, returns an Err object with
+    the exception raised by the function.
+    """
 
-    return wrapper
+    def decorator(func: Callable[P, T]) -> Callable[P, Ok[T, E] | Err[T, E]]:
+        @functools.wraps(func)
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> Ok[T, E] | Err[T, E]:
+            try:
+                result = func(*args, **kwargs)
+            except error as e:
+                return Err(e)
+            return Ok(result)
+
+        return wrapper
+
+    return decorator
