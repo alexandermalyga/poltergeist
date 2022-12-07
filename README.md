@@ -1,5 +1,8 @@
 # poltergeist
 
+[![pypi](https://img.shields.io/pypi/v/poltergeist.svg)](https://pypi.python.org/pypi/poltergeist)
+[![versions](https://img.shields.io/pypi/pyversions/poltergeist.svg)](https://github.com/alexandermalyga/poltergeist)
+
 Experimental Rust-like error handling in Python, with type-safety in mind.
 
 ## Installation
