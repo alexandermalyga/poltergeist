@@ -1,0 +1,40 @@
+name: Python package
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        export POETRY_HOME=/opt/poetry
+        python3 -m venv $POETRY_HOME
+        $POETRY_HOME/bin/pip install poetry==1.2.2
+        $POETRY_HOME/bin/poetry install
+    - name: Format with black and isort
+      run: |
+        $POETRY_HOME/bin/poetry run isort --check --diff .
+        $POETRY_HOME/bin/poetry run black --check --diff .
+    - name: Type check with mypy
+      run: |
+        $POETRY_HOME/bin/poetry run mypy -p poltergeist
+    - name: Test with pytest
+      run: |
+        $POETRY_HOME/bin/poetry run pytest tests
