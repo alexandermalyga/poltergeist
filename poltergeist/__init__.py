@@ -33,17 +33,16 @@ Result = Ok[T, E] | Err[T, E]
 
 
 def poltergeist(
-    func: Callable[P, T] | None = None, /, *, error: E = Exception
-) -> Callable[P, Result]:
-    if func is None:
-        # Means this was called as @poltergeist() with parenthesis
-        return functools.partial(poltergeist, error=error)  # type: ignore
-
+    func: Callable[P, T]
+) -> Callable[P, Ok[T, Exception] | Err[T, Exception]]:
     @functools.wraps(func)
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result:
+    def wrapper(
+        *args: P.args, **kwargs: P.kwargs
+    ) -> Ok[T, Exception] | Err[T, Exception]:
         try:
-            return Ok(func(*args, **kwargs))
-        except error as e:
+            result = func(*args, **kwargs)
+        except Exception as e:
             return Err(e)
+        return Ok(result)
 
     return wrapper
