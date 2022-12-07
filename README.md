@@ -2,6 +2,12 @@
 
 Experimental Rust-like error handling in Python, with type-safety in mind.
 
+## Installation
+
+```
+pip install poltergeist
+```
+
 ## Examples
 
 Use the provided `@poltergeist` decorator on any function:
