@@ -22,7 +22,7 @@ jobs:
         id: cached-poetry
         uses: actions/cache@v3
         with:
-          path: ~/.local/share/pypoetry
+          path: ~/.local
           key: poetry-0 # increment to reset cache
       - name: Install Poetry
         if: steps.cached-poetry.outputs.cache-hit != 'true'
