@@ -40,8 +40,7 @@ match result:
             case _:
                 raise e
 
-# Or directly get the returned value
-# This will raise the original exception, if there was one
+# Or directly get the returned value, raising an exception if there was one
 content = result.unwrap()
 ```
 
