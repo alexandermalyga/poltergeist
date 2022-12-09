@@ -1,3 +1,4 @@
+import abc
 import functools
 from dataclasses import dataclass
 from typing import Callable, Generic, NoReturn, ParamSpec, Type, TypeVar
@@ -7,8 +8,18 @@ T = TypeVar("T")
 E = TypeVar("E", bound=BaseException)
 
 
+class Result(abc.ABC, Generic[T, E]):
+    @abc.abstractmethod
+    def unwrap(self) -> T:
+        ...
+
+    @abc.abstractmethod
+    def unwrap_or_else(self, func: Callable[[E], T]) -> T:
+        ...
+
+
 @dataclass(repr=False, frozen=True, slots=True)
-class Ok(Generic[T, E]):
+class Ok(Result[T, E]):
     _value: T
 
     def __repr__(self) -> str:
@@ -22,7 +33,7 @@ class Ok(Generic[T, E]):
 
 
 @dataclass(repr=False, frozen=True, slots=True)
-class Err(Generic[T, E]):
+class Err(Result[T, E]):
     _err: E
 
     def __repr__(self) -> str:
@@ -33,9 +44,6 @@ class Err(Generic[T, E]):
 
     def unwrap_or_else(self, func: Callable[[E], T]) -> T:
         return func(self._err)
-
-
-Result = Ok[T, E] | Err[T, E]
 
 
 def poltergeist(
