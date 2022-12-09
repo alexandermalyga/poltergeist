@@ -17,6 +17,9 @@ class Ok(Generic[T, E]):
     def unwrap(self) -> T:
         return self._value
 
+    def unwrap_or_else(self, func: Callable[[E], T]) -> T:
+        return self.unwrap()
+
 
 @dataclass(repr=False, frozen=True, slots=True)
 class Err(Generic[T, E]):
@@ -27,6 +30,9 @@ class Err(Generic[T, E]):
 
     def unwrap(self) -> NoReturn:
         raise self._err
+
+    def unwrap_or_else(self, func: Callable[[E], T]) -> T:
+        return func(self._err)
 
 
 Result = Ok[T, E] | Err[T, E]
