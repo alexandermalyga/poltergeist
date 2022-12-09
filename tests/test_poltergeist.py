@@ -3,11 +3,11 @@ from typing import Any
 
 import pytest
 
-from poltergeist import Err, Ok, poltergeist
+from poltergeist import Err, Ok, Result, poltergeist
 
 
 def test_ok() -> None:
-    result: Ok[str, Exception] = Ok("abc")
+    result: Result[str, Exception] = Ok("abc")
 
     match result:
         case Ok(v):
@@ -20,7 +20,7 @@ def test_ok() -> None:
 
 
 def test_error() -> None:
-    result: Err[Any, ValueError] = Err(ValueError("abc"))
+    result: Result[Any, ValueError] = Err(ValueError("abc"))
 
     match result:
         case Err(e):
