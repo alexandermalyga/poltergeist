@@ -10,6 +10,14 @@ E = TypeVar("E", bound=BaseException)
 
 class Result(abc.ABC, Generic[T, E]):
     @abc.abstractmethod
+    def ok(self) -> T | None:
+        ...
+
+    @abc.abstractmethod
+    def err(self) -> E | None:
+        ...
+
+    @abc.abstractmethod
     def unwrap(self) -> T:
         ...
 
@@ -29,6 +37,12 @@ class Ok(Result[T, E]):
     def __repr__(self) -> str:
         return f"Ok({repr(self._value)})"
 
+    def ok(self) -> T:
+        return self._value
+
+    def err(self) -> None:
+        return None
+
     def unwrap(self) -> T:
         return self._value
 
@@ -45,6 +59,12 @@ class Err(Result[T, E]):
 
     def __repr__(self) -> str:
         return f"Err({repr(self._err)})"
+
+    def ok(self) -> None:
+        return None
+
+    def err(self) -> E:
+        return self._err
 
     def unwrap(self) -> NoReturn:
         raise self._err

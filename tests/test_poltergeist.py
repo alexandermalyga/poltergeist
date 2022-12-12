@@ -15,6 +15,10 @@ def test_ok() -> None:
         case _:
             pytest.fail("Should have been Ok")
 
+    assert result.ok() == "abc"
+
+    assert result.err() is None
+
     assert result.unwrap() == "abc"
 
     assert result.unwrap_or("aaa") == "abc"
@@ -23,7 +27,7 @@ def test_ok() -> None:
 
 
 def test_error() -> None:
-    result: Result[Any, ValueError] = Err(ValueError("abc"))
+    result: Result[str, ValueError] = Err(ValueError("abc"))
 
     match result:
         case Err(e):
@@ -31,6 +35,11 @@ def test_error() -> None:
             assert e.args == ("abc",)
         case _:
             pytest.fail("Should have been Err")
+
+    assert result.ok() is None
+
+    assert type(result.err()) == ValueError
+    assert result.err().args == ("abc",)
 
     with pytest.raises(ValueError) as excinfo:
         result.unwrap()
