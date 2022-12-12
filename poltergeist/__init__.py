@@ -9,25 +9,30 @@ E = TypeVar("E", bound=BaseException)
 
 
 class Result(abc.ABC, Generic[T, E]):
+    """
+    Abstract base class that represents with it's subclasses either success (Ok)
+    or failure (Err).
+    """
+
     @abc.abstractmethod
     def ok(self) -> T | None:
-        ...
+        """Returns the contained Ok value or None."""
 
     @abc.abstractmethod
     def err(self) -> E | None:
-        ...
+        """Returns the contained Err exception or None."""
 
     @abc.abstractmethod
     def unwrap(self) -> T:
-        ...
+        """Returns the contained Ok value or raises the contained Err exception."""
 
     @abc.abstractmethod
     def unwrap_or(self, default: T) -> T:
-        ...
+        """Returns the contained Ok value or a provided default."""
 
     @abc.abstractmethod
     def unwrap_or_else(self, op: Callable[[E], T]) -> T:
-        ...
+        """Returns the contained Ok value or computes it from a callable."""
 
 
 @dataclass(repr=False, frozen=True, slots=True)
