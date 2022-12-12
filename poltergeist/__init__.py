@@ -14,6 +14,10 @@ class Result(abc.ABC, Generic[T, E]):
         ...
 
     @abc.abstractmethod
+    def unwrap_or(self, default: T) -> T:
+        ...
+
+    @abc.abstractmethod
     def unwrap_or_else(self, op: Callable[[E], T]) -> T:
         ...
 
@@ -28,6 +32,9 @@ class Ok(Result[T, E]):
     def unwrap(self) -> T:
         return self._value
 
+    def unwrap_or(self, default: T) -> T:
+        return self.unwrap()
+
     def unwrap_or_else(self, op: Callable[[E], T]) -> T:
         return self.unwrap()
 
@@ -41,6 +48,9 @@ class Err(Result[T, E]):
 
     def unwrap(self) -> NoReturn:
         raise self._err
+
+    def unwrap_or(self, default: T) -> T:
+        return default
 
     def unwrap_or_else(self, op: Callable[[E], T]) -> T:
         return op(self._err)

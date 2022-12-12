@@ -16,6 +16,9 @@ def test_ok() -> None:
             pytest.fail("Should have been Ok")
 
     assert result.unwrap() == "abc"
+
+    assert result.unwrap_or("aaa") == "abc"
+
     assert result.unwrap_or_else(lambda e: str(e)) == "abc"
 
 
@@ -34,6 +37,8 @@ def test_error() -> None:
 
     assert type(excinfo.value) == ValueError
     assert excinfo.value.args == ("abc",)
+
+    assert result.unwrap_or("aaa") == "aaa"
 
     assert result.unwrap_or_else(lambda e: f"Exception is {e}") == "Exception is abc"
 
