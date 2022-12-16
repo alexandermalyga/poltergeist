@@ -6,6 +6,7 @@ from typing import Callable, Generic, NoReturn, ParamSpec, Type, TypeVar
 P = ParamSpec("P")
 T = TypeVar("T")
 E = TypeVar("E", bound=BaseException)
+DefaultT = TypeVar("DefaultT")
 
 
 class Result(abc.ABC, Generic[T, E]):
@@ -27,7 +28,7 @@ class Result(abc.ABC, Generic[T, E]):
         """Returns the contained Ok value or raises the contained Err exception."""
 
     @abc.abstractmethod
-    def unwrap_or(self, default: T) -> T:
+    def unwrap_or(self, default: DefaultT) -> T | DefaultT:
         """Returns the contained Ok value or a provided default."""
 
     @abc.abstractmethod
@@ -51,7 +52,7 @@ class Ok(Result[T, E]):
     def unwrap(self) -> T:
         return self._value
 
-    def unwrap_or(self, default: T) -> T:
+    def unwrap_or(self, default: DefaultT) -> T:
         return self.unwrap()
 
     def unwrap_or_else(self, op: Callable[[E], T]) -> T:
@@ -74,7 +75,7 @@ class Err(Result[T, E]):
     def unwrap(self) -> NoReturn:
         raise self._err
 
-    def unwrap_or(self, default: T) -> T:
+    def unwrap_or(self, default: DefaultT) -> DefaultT:
         return default
 
     def unwrap_or_else(self, op: Callable[[E], T]) -> T:
