@@ -23,7 +23,20 @@ from poltergeist import Err, Ok, poltergeist
 def read_text(path: Path) -> str:
     return path.read_text()
 
+# Result of type Result[str, OSError]
 result = read_text(Path("test.txt"))
+
+# Get the contained Ok value or raise the contained Err exception
+content = result.unwrap()
+
+# Get the contained Ok value or a provided default
+content = result.unwrap_or("default text")
+
+# Get the contained Ok value or compute it from a callable
+content = result.unwrap_or_else(lambda e: f"The exception was: {e}")
+
+# Get the contained Err exception or None
+err = result.err()
 
 # Handle errors using structural pattern matching
 match result:
@@ -39,9 +52,6 @@ match result:
                 print("Permission error:", e.errno)
             case _:
                 raise e
-
-# Or directly get the returned value, raising an exception if there was one
-content = result.unwrap()
 ```
 
 You can also wrap errors yourself:
