@@ -15,11 +15,11 @@ def test_ok() -> None:
         case _:
             pytest.fail("Should have been Ok")
 
-    assert result.ok() == "abc"
-
     assert result.err() is None
 
     assert result.unwrap() == "abc"
+
+    assert result.unwrap_or() == "abc"
 
     assert result.unwrap_or("aaa") == "abc"
 
@@ -36,8 +36,6 @@ def test_error() -> None:
         case _:
             pytest.fail("Should have been Err")
 
-    assert result.ok() is None
-
     assert type(result.err()) == ValueError
     assert result.err().args == ("abc",)
 
@@ -46,6 +44,8 @@ def test_error() -> None:
 
     assert type(excinfo.value) == ValueError
     assert excinfo.value.args == ("abc",)
+
+    assert result.unwrap_or() is None
 
     assert result.unwrap_or("aaa") == "aaa"
 

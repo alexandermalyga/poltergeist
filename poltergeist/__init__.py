@@ -1,7 +1,6 @@
-import abc
 import functools
 from dataclasses import dataclass
-from typing import Callable, Generic, NoReturn, ParamSpec, Type, TypeVar
+from typing import Any, Callable, Generic, NoReturn, ParamSpec, Type, TypeVar, overload
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -9,42 +8,12 @@ E = TypeVar("E", bound=BaseException)
 DefaultT = TypeVar("DefaultT")
 
 
-class Result(abc.ABC, Generic[T, E]):
-    """
-    Abstract base class that represents with it's subclasses either success (Ok)
-    or failure (Err).
-    """
-
-    @abc.abstractmethod
-    def ok(self) -> T | None:
-        """Returns the contained Ok value or None."""
-
-    @abc.abstractmethod
-    def err(self) -> E | None:
-        """Returns the contained Err exception or None."""
-
-    @abc.abstractmethod
-    def unwrap(self) -> T:
-        """Returns the contained Ok value or raises the contained Err exception."""
-
-    @abc.abstractmethod
-    def unwrap_or(self, default: DefaultT) -> T | DefaultT:
-        """Returns the contained Ok value or a provided default."""
-
-    @abc.abstractmethod
-    def unwrap_or_else(self, op: Callable[[E], T]) -> T:
-        """Returns the contained Ok value or computes it from a callable."""
-
-
 @dataclass(repr=False, frozen=True, slots=True)
-class Ok(Result[T, E]):
+class Ok(Generic[T, E]):
     _value: T
 
     def __repr__(self) -> str:
         return f"Ok({repr(self._value)})"
-
-    def ok(self) -> T:
-        return self._value
 
     def err(self) -> None:
         return None
@@ -52,7 +21,15 @@ class Ok(Result[T, E]):
     def unwrap(self) -> T:
         return self._value
 
+    @overload
+    def unwrap_or(self) -> T:
+        ...
+
+    @overload
     def unwrap_or(self, default: DefaultT) -> T:
+        ...
+
+    def unwrap_or(self, default: Any = None) -> Any:
         return self.unwrap()
 
     def unwrap_or_else(self, op: Callable[[E], T]) -> T:
@@ -60,14 +37,11 @@ class Ok(Result[T, E]):
 
 
 @dataclass(repr=False, frozen=True, slots=True)
-class Err(Result[T, E]):
+class Err(Generic[T, E]):
     _err: E
 
     def __repr__(self) -> str:
         return f"Err({repr(self._err)})"
-
-    def ok(self) -> None:
-        return None
 
     def err(self) -> E:
         return self._err
@@ -75,11 +49,22 @@ class Err(Result[T, E]):
     def unwrap(self) -> NoReturn:
         raise self._err
 
+    @overload
+    def unwrap_or(self) -> None:
+        ...
+
+    @overload
     def unwrap_or(self, default: DefaultT) -> DefaultT:
+        ...
+
+    def unwrap_or(self, default: Any = None) -> Any:
         return default
 
     def unwrap_or_else(self, op: Callable[[E], T]) -> T:
         return op(self._err)
+
+
+Result = Ok[T, E] | Err[T, E]
 
 
 def poltergeist(
