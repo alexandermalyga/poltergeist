@@ -32,7 +32,7 @@ class Ok(Generic[T, E]):
     def unwrap_or(self, default: Any = None) -> Any:
         return self.unwrap()
 
-    def unwrap_or_else(self, op: Callable[[E], T]) -> T:
+    def unwrap_or_else(self, op: Callable[[E], DefaultT]) -> T:
         return self.unwrap()
 
 
@@ -60,7 +60,7 @@ class Err(Generic[T, E]):
     def unwrap_or(self, default: Any = None) -> Any:
         return default
 
-    def unwrap_or_else(self, op: Callable[[E], T]) -> T:
+    def unwrap_or_else(self, op: Callable[[E], DefaultT]) -> DefaultT:
         return op(self._err)
 
 
