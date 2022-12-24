@@ -17,7 +17,7 @@ Use the provided `@poltergeist` decorator on any function:
 
 ```python
 from pathlib import Path
-from poltergeist import Err, Ok, poltergeist
+from poltergeist import Err, Ok, Result, poltergeist
 
 # Wrap a function to handle a concrete exception type (Exception by default)
 @poltergeist(error=OSError)
@@ -26,11 +26,25 @@ def read_text(path: Path) -> str:
 
 # Now the function returns an object of type Result[str, OSError]
 result = read_text(Path("test.txt"))
+```
 
+Or wrap errors manually:
+
+```python
+def read_text(path: Path) -> Result[str, FileNotFoundError]:
+    try:
+        return Ok(path.read_text())
+    except FileNotFoundError as e:
+        return Err(e)
+```
+
+Then handle the result:
+
+```python
 # Get the contained Ok value or raise the contained Err exception
 content = result.unwrap()
 
-# Get the contained Ok value or a provided default
+# Get the contained Ok value or a default value
 content = result.unwrap_or("default text")
 
 # Get the contained Ok value or compute it from a callable
@@ -52,18 +66,3 @@ match result:
             case _:
                 raise e
 ```
-
-You can also wrap errors yourself:
-
-```python
-from pathlib import Path
-from poltergeist import Err, Ok, Result
-
-def read_text(path: Path) -> Result[str, FileNotFoundError]:
-    try:
-        return Ok(path.read_text())
-    except FileNotFoundError as e:
-        return Err(e)
-```
-
-Both of these examples pass type checking and provide in-editor autocompletion.
