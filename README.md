@@ -19,11 +19,12 @@ Use the provided `@poltergeist` decorator on any function:
 from pathlib import Path
 from poltergeist import Err, Ok, poltergeist
 
-@poltergeist(OSError)
+# Wrap a function to handle a concrete exception type (Exception by default)
+@poltergeist(error=OSError)
 def read_text(path: Path) -> str:
     return path.read_text()
 
-# Result of type Result[str, OSError]
+# Now the function returns an object of type Result[str, OSError]
 result = read_text(Path("test.txt"))
 
 # Get the contained Ok value or raise the contained Err exception
@@ -41,11 +42,9 @@ err = result.err()
 # Handle errors using structural pattern matching
 match result:
     case Ok(content):
-        # Type-checkers know the return type of the original function
         print("File content in upper case:", content.upper())
     case Err(e):
         match e:
-            # The exception type is also known
             case FileNotFoundError():
                 print("File not found:", e.filename)
             case PermissionError():
