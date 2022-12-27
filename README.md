@@ -46,6 +46,7 @@ content = result.unwrap()
 
 # Get the contained Ok value or a default value
 content = result.unwrap_or("default text")
+content = result.unwrap_or()  # default None
 
 # Get the contained Ok value or compute it from a callable
 content = result.unwrap_or_else(lambda e: f"The exception was: {e}")
