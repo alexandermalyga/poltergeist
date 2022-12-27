@@ -34,7 +34,7 @@ class Ok(Generic[T, E]):
         return self.unwrap()
 
 
-@dataclass(repr=False, frozen=True, slots=True)
+@dataclass(repr=False, eq=False, frozen=True, slots=True)
 class Err(Generic[T, E]):
     _err: E
 
@@ -60,6 +60,13 @@ class Err(Generic[T, E]):
 
     def unwrap_or_else(self, op: Callable[[E], DefaultT]) -> DefaultT:
         return op(self._err)
+
+    def __eq__(self, __o: Any) -> bool:
+        return (
+            type(__o) is Err
+            and type(__o._err) is type(self._err)
+            and __o._err.args == self._err.args
+        )
 
 
 Result = Ok[T, E] | Err[T, E]

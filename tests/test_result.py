@@ -23,6 +23,14 @@ def test_ok() -> None:
     assert result.unwrap_or_else(lambda e: str(e)) == "abc"
 
 
+def test_ok_eq() -> None:
+    result: Result[str, Exception] = Ok("abc")
+    assert result == Ok("abc")
+    assert result != Ok("aaa")
+    assert result != Err("abc")
+    assert result != "abc"
+
+
 def test_error() -> None:
     result: Result[str, ValueError] = Err(ValueError("abc"))
 
@@ -47,3 +55,13 @@ def test_error() -> None:
     assert result.unwrap_or("aaa") == "aaa"
 
     assert result.unwrap_or_else(lambda e: f"Exception is {e}") == "Exception is abc"
+
+
+def test_err_eq() -> None:
+    result: Result[str, ValueError] = Err(ValueError("abc"))
+    assert result == Err(ValueError("abc"))
+    assert result != Err(ValueError("aaa"))
+    assert result != Err(ValueError("abc", 1))
+    assert result != Err(Exception("abc"))
+    assert result != Ok("abc")
+    assert result != "abc"
