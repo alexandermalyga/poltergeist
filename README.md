@@ -31,10 +31,10 @@ result = read_text(Path("test.txt"))
 Or wrap errors manually:
 
 ```python
-def read_text(path: Path) -> Result[str, FileNotFoundError]:
+def read_text(path: Path) -> Result[str, OSError]:
     try:
         return Ok(path.read_text())
-    except FileNotFoundError as e:
+    except OSError as e:
         return Err(e)
 ```
 
