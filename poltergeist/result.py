@@ -1,11 +1,12 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Generic, NoReturn, TypeVar, overload
+from typing import Any, Callable, Generic, NoReturn, TypeVar, final, overload
 
 T = TypeVar("T")
 E = TypeVar("E", bound=BaseException)
 DefaultT = TypeVar("DefaultT")
 
 
+@final
 @dataclass(repr=False, frozen=True, slots=True)
 class Ok(Generic[T, E]):
     _value: T
@@ -34,6 +35,7 @@ class Ok(Generic[T, E]):
         return self.unwrap()
 
 
+@final
 @dataclass(repr=False, eq=False, frozen=True, slots=True)
 class Err(Generic[T, E]):
     _err: E
