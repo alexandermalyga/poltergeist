@@ -27,7 +27,7 @@ def test_ok_eq() -> None:
     result: Result[str, Exception] = Ok("abc")
     assert result == Ok("abc")
     assert result != Ok("aaa")
-    assert result != Err("abc")
+    assert result != Err(Exception("abc"))
     assert result != "abc"
 
 
