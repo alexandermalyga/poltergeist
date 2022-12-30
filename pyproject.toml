@@ -7,6 +7,15 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/alexandermalyga/poltergeist"
 repository = "https://github.com/alexandermalyga/poltergeist"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+    "Intended Audience :: Developers",
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
