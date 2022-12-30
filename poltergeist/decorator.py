@@ -1,11 +1,9 @@
 import functools
-from typing import Any, Callable, ParamSpec, Type, TypeVar, overload
+from typing import Any, Callable, ParamSpec, Type, overload
 
-from poltergeist.result import Err, Ok, Result
+from poltergeist.result import E, Err, Ok, Result, T
 
 P = ParamSpec("P")
-T = TypeVar("T")
-E = TypeVar("E", bound=BaseException)
 
 
 @overload
