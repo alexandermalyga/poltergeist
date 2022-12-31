@@ -1,0 +1,40 @@
+- case: result_generic
+  main: |
+    from poltergeist import Result, Ok, Err
+    ok: Result[str, Exception] = Ok(123)  # E: Argument 1 to "Ok" has incompatible type "int"; expected "str"  [arg-type]
+    err: Result[str, Exception] = Err(123)  # E: Argument 1 to "Err" has incompatible type "int"; expected "Exception"  [arg-type]
+    other: Result[str, int]
+  out: |
+    main:4: error: Type argument "int" of "Ok" must be a subtype of "BaseException"  [type-var]
+    main:4: error: Type argument "int" of "Err" must be a subtype of "BaseException"  [type-var]
+
+- case: result_err
+  main: |
+    from poltergeist import Result
+    instance: Result[str, Exception]
+    reveal_type(instance.err())  # N: Revealed type is "Union[None, builtins.Exception]"
+
+- case: result_unwrap
+  main: |
+    from poltergeist import Result
+    instance: Result[str, Exception]
+    reveal_type(instance.unwrap())  # N: Revealed type is "builtins.str"
+
+- case: result_unwrap_or
+  main: |
+    from poltergeist import Result
+    instance: Result[str, Exception]
+    reveal_type(instance.unwrap_or())  # N: Revealed type is "Union[builtins.str, None]"
+    reveal_type(instance.unwrap_or(123))  # N: Revealed type is "Union[builtins.str, builtins.int]"
+    reveal_type(instance.unwrap_or("abc"))  # N: Revealed type is "builtins.str"
+
+- case: result_unwrap_or_else
+  main: |
+    from poltergeist import Result
+    instance: Result[str, Exception]
+    reveal_type(instance.unwrap_or_else(lambda e: e))  # N: Revealed type is "Union[builtins.str, builtins.Exception]"
+    default: str = instance.unwrap_or_else(lambda e: e)  # E: Incompatible types in assignment (expression has type "Union[str, Exception]", variable has type "str")  [assignment]
+    instance.unwrap_or_else(123)
+  out: |
+    main:5: error: Argument 1 to "unwrap_or_else" of "Ok" has incompatible type "int"; expected "Callable[[Exception], <nothing>]"  [arg-type]
+    main:5: error: Argument 1 to "unwrap_or_else" of "Err" has incompatible type "int"; expected "Callable[[Exception], <nothing>]"  [arg-type]
