@@ -5,7 +5,7 @@
     @poltergeist
     def test(a: int, b: str) -> float | None: ...
 
-    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None], builtins.Exception], poltergeist.result.Err[Union[builtins.float, None], builtins.Exception]]"
+    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[builtins.Exception]]"
 
 - case: decorator_default
   main: |
@@ -14,7 +14,7 @@
     @poltergeist()
     def test(a: int, b: str) -> float | None: ...
 
-    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None], builtins.Exception], poltergeist.result.Err[Union[builtins.float, None], builtins.Exception]]"
+    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[builtins.Exception]]"
 
 - case: decorator_with_args
   main: |
@@ -23,7 +23,7 @@
     @poltergeist(error=ValueError)
     def test(a: int, b: str) -> float | None: ...
 
-    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None], builtins.ValueError], poltergeist.result.Err[Union[builtins.float, None], builtins.ValueError]]"
+    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[builtins.ValueError]]"
 
 - case: decorator_invalid_error_type
   main: |
@@ -34,6 +34,6 @@
   out: |
     main:3: error: No overload variant of "poltergeist" matches argument type "int"  [call-overload]
     main:3: note: Possible overload variants:
-    main:3: note:     def [P`-1, T] poltergeist(Callable[P, T], /) -> Callable[P, Union[Ok[T, Exception], Err[T, Exception]]]
-    main:3: note:     def poltergeist() -> Callable[[Callable[P, T]], Callable[P, Union[Ok[T, Exception], Err[T, Exception]]]]
-    main:3: note:     def [E <: BaseException] poltergeist(*, error: Type[E]) -> Callable[[Callable[P, T]], Callable[P, Union[Ok[T, E], Err[T, E]]]]
+    main:3: note:     def [P`-1, T] poltergeist(Callable[P, T], /) -> Callable[P, Union[Ok[T], Err[Exception]]]
+    main:3: note:     def poltergeist() -> Callable[[Callable[P, T]], Callable[P, Union[Ok[T], Err[Exception]]]]
+    main:3: note:     def [E <: BaseException] poltergeist(*, error: Type[E]) -> Callable[[Callable[P, T]], Callable[P, Union[Ok[T], Err[E]]]]

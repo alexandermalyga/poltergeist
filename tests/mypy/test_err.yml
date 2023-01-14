@@ -1,25 +1,25 @@
 - case: err_generic
   main: |
     from poltergeist import Err
-    instance: Err[str, Exception] = Err(123)  # E: Argument 1 to "Err" has incompatible type "int"; expected "Exception"  [arg-type]
-    other: Err[str, int]  # E: Type argument "int" of "Err" must be a subtype of "BaseException"  [type-var]
+    instance: Err[Exception] = Err(123)  # E: Argument 1 to "Err" has incompatible type "int"; expected "Exception"  [arg-type]
+    other: Err[int]  # E: Type argument "int" of "Err" must be a subtype of "BaseException"  [type-var]
 
 - case: err_err
   main: |
     from poltergeist import Err
-    instance: Err[str, Exception]
+    instance: Err[Exception]
     reveal_type(instance.err())  # N: Revealed type is "builtins.Exception"
 
 - case: err_unwrap
   main: |
     from poltergeist import Err
-    instance: Err[str, Exception]
+    instance: Err[Exception]
     reveal_type(instance.unwrap())  # N: Revealed type is "<nothing>"
 
 - case: err_unwrap_or
   main: |
     from poltergeist import Err
-    instance: Err[str, Exception]
+    instance: Err[Exception]
     reveal_type(instance.unwrap_or())  # N: Revealed type is "None"
     reveal_type(instance.unwrap_or(123))  # N: Revealed type is "builtins.int"
     reveal_type(instance.unwrap_or("abc"))  # N: Revealed type is "builtins.str"
@@ -27,7 +27,7 @@
 - case: err_unwrap_or_else
   main: |
     from poltergeist import Err
-    instance: Err[str, Exception]
+    instance: Err[Exception]
     reveal_type(instance.unwrap_or_else(lambda e: e))  # N: Revealed type is "builtins.Exception"
     instance.unwrap_or_else(123)  # E: Argument 1 to "unwrap_or_else" of "Err" has incompatible type "int"; expected "Callable[[Exception], <nothing>]"  [arg-type]
     default: str = instance.unwrap_or_else(lambda e: e)  # E: Incompatible types in assignment (expression has type "Exception", variable has type "str")  [assignment]

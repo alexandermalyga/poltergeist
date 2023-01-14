@@ -8,7 +8,7 @@ DefaultT = TypeVar("DefaultT")
 
 @final
 @dataclass(repr=False, frozen=True, slots=True)
-class Ok(Generic[T, E]):
+class Ok(Generic[T]):
     _value: T
 
     def __repr__(self) -> str:
@@ -31,13 +31,13 @@ class Ok(Generic[T, E]):
     def unwrap_or(self, default: Any = None) -> Any:
         return self.unwrap()
 
-    def unwrap_or_else(self, op: Callable[[E], DefaultT]) -> T:
+    def unwrap_or_else(self, op: Any) -> T:
         return self.unwrap()
 
 
 @final
 @dataclass(repr=False, eq=False, frozen=True, slots=True)
-class Err(Generic[T, E]):
+class Err(Generic[E]):
     _err: E
 
     def __repr__(self) -> str:
@@ -71,4 +71,4 @@ class Err(Generic[T, E]):
         )
 
 
-Result = Ok[T, E] | Err[T, E]
+Result = Ok[T] | Err[E]
