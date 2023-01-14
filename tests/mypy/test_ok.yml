@@ -27,7 +27,4 @@
   main: |
     from poltergeist import Ok
     instance: Ok[str]
-    reveal_type(instance.unwrap_or_else(lambda e: e))
-  out: |
-    main:3: note: Revealed type is "builtins.str"
-    main:3: error: Argument 1 to "unwrap_or_else" of "Ok" has incompatible type "Callable[[Any], Any]"; expected "NoReturn"  [arg-type]
+    reveal_type(instance.unwrap_or_else(lambda e: e))  # N: Revealed type is "builtins.str"

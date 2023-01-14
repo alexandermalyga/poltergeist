@@ -31,7 +31,7 @@ class Ok(Generic[T]):
     def unwrap_or(self, default: Any = None) -> Any:
         return self.unwrap()
 
-    def unwrap_or_else(self, op: NoReturn) -> T:
+    def unwrap_or_else(self, op: Any) -> T:
         return self.unwrap()
 
 
