@@ -4,7 +4,7 @@ from poltergeist import Err, Ok, Result
 
 
 def test_ok() -> None:
-    result: Result[str, Exception] = Ok("abc")
+    result = Ok("abc")
 
     match result:
         case Ok(v):
@@ -24,7 +24,7 @@ def test_ok() -> None:
 
 
 def test_ok_eq() -> None:
-    result: Result[str, Exception] = Ok("abc")
+    result = Ok("abc")
     assert result == Ok("abc")
     assert result != Ok("aaa")
     assert result != Err(Exception("abc"))
@@ -32,7 +32,7 @@ def test_ok_eq() -> None:
 
 
 def test_error() -> None:
-    result: Result[str, ValueError] = Err(ValueError("abc"))
+    result = Err(ValueError("abc"))
 
     match result:
         case Err(e):
@@ -58,7 +58,7 @@ def test_error() -> None:
 
 
 def test_err_eq() -> None:
-    result: Result[str, ValueError] = Err(ValueError("abc"))
+    result = Err(ValueError("abc"))
     assert result == Err(ValueError("abc"))
     assert result != Err(ValueError("aaa"))
     assert result != Err(ValueError("abc", 1))

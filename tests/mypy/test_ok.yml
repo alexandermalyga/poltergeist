@@ -1,25 +1,24 @@
 - case: ok_generic
   main: |
     from poltergeist import Ok
-    instance: Ok[str, Exception] = Ok(123)  # E: Argument 1 to "Ok" has incompatible type "int"; expected "str"  [arg-type]
-    other: Ok[str, int]  # E: Type argument "int" of "Ok" must be a subtype of "BaseException"  [type-var]
+    instance: Ok[str] = Ok(123)  # E: Argument 1 to "Ok" has incompatible type "int"; expected "str"  [arg-type]
 
 - case: ok_err
   main: |
     from poltergeist import Ok
-    instance: Ok[str, Exception]
+    instance: Ok[str]
     reveal_type(instance.err())  # N: Revealed type is "None"
 
 - case: ok_unwrap
   main: |
     from poltergeist import Ok
-    instance: Ok[str, Exception]
+    instance: Ok[str]
     reveal_type(instance.unwrap())  # N: Revealed type is "builtins.str"
 
 - case: ok_unwrap_or
   main: |
     from poltergeist import Ok
-    instance: Ok[str, Exception]
+    instance: Ok[str]
     reveal_type(instance.unwrap_or())  # N: Revealed type is "builtins.str"
     reveal_type(instance.unwrap_or(123))  # N: Revealed type is "builtins.str"
     reveal_type(instance.unwrap_or("abc"))  # N: Revealed type is "builtins.str"
@@ -27,6 +26,8 @@
 - case: ok_unwrap_or_else
   main: |
     from poltergeist import Ok
-    instance: Ok[str, Exception]
-    reveal_type(instance.unwrap_or_else(lambda e: e))  # N: Revealed type is "builtins.str"
-    instance.unwrap_or_else(123)  # E: Argument 1 to "unwrap_or_else" of "Ok" has incompatible type "int"; expected "Callable[[Exception], <nothing>]"  [arg-type]
+    instance: Ok[str]
+    reveal_type(instance.unwrap_or_else(lambda e: e))
+  out: |
+    main:3: note: Revealed type is "builtins.str"
+    main:3: error: Argument 1 to "unwrap_or_else" of "Ok" has incompatible type "Callable[[Any], Any]"; expected "NoReturn"  [arg-type]

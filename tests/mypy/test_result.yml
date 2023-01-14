@@ -3,10 +3,7 @@
     from poltergeist import Result, Ok, Err
     ok: Result[str, Exception] = Ok(123)  # E: Argument 1 to "Ok" has incompatible type "int"; expected "str"  [arg-type]
     err: Result[str, Exception] = Err(123)  # E: Argument 1 to "Err" has incompatible type "int"; expected "Exception"  [arg-type]
-    other: Result[str, int]
-  out: |
-    main:4: error: Type argument "int" of "Ok" must be a subtype of "BaseException"  [type-var]
-    main:4: error: Type argument "int" of "Err" must be a subtype of "BaseException"  [type-var]
+    other: Result[str, int]  # E: Type argument "int" of "Err" must be a subtype of "BaseException"  [type-var]
 
 - case: result_err
   main: |
@@ -36,5 +33,5 @@
     default: str = instance.unwrap_or_else(lambda e: e)  # E: Incompatible types in assignment (expression has type "Union[str, Exception]", variable has type "str")  [assignment]
     instance.unwrap_or_else(123)
   out: |
-    main:5: error: Argument 1 to "unwrap_or_else" of "Ok" has incompatible type "int"; expected "Callable[[Exception], <nothing>]"  [arg-type]
+    main:5: error: Argument 1 to "unwrap_or_else" of "Ok" has incompatible type "int"; expected "NoReturn"  [arg-type]
     main:5: error: Argument 1 to "unwrap_or_else" of "Err" has incompatible type "int"; expected "Callable[[Exception], <nothing>]"  [arg-type]
