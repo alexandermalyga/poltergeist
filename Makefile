@@ -3,7 +3,7 @@ sources = poltergeist tests
 .PHONY: test lint check
 
 test:
-	pytest -vv tests
+	pytest -vv --cov=poltergeist tests
 
 lint:
 	isort $(sources)

@@ -26,6 +26,7 @@ mypy = "^0.991"
 black = "^22.10.0"
 isort = "^5.10.1"
 pytest-mypy-plugins = "^1.10.1"
+pytest-cov = "^4.0.0"
 
 [tool.mypy]
 strict = true
@@ -35,6 +36,9 @@ target_version = ["py310", "py311"]
 
 [tool.isort]
 profile = "black"
+
+[tool.coverage.report]
+exclude_lines = ["pragma: not covered", "@overload"]
 
 [build-system]
 requires = ["poetry-core"]
