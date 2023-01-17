@@ -31,6 +31,11 @@ def test_ok_eq() -> None:
     assert result != "abc"
 
 
+def test_ok_repr() -> None:
+    result = Ok("abc")
+    assert repr(result) == "Ok('abc')"
+
+
 def test_error() -> None:
     result = Err(ValueError("abc"))
 
@@ -65,3 +70,8 @@ def test_err_eq() -> None:
     assert result != Err(Exception("abc"))
     assert result != Ok("abc")
     assert result != "abc"
+
+
+def test_err_repr() -> None:
+    result = Err(ValueError("Incorrect value!"))
+    assert repr(result) == "Err(ValueError('Incorrect value!'))"
