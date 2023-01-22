@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Any, Callable, Generic, NoReturn, TypeVar, final, overload
 
 T = TypeVar("T")
@@ -7,12 +6,19 @@ DefaultT = TypeVar("DefaultT")
 
 
 @final
-@dataclass(repr=False, frozen=True, slots=True)
 class Ok(Generic[T]):
-    _value: T
+
+    __slots__ = ("_value",)
+    __match_args__ = ("_value",)
+
+    def __init__(self, value: T) -> None:
+        self._value = value
 
     def __repr__(self) -> str:
         return f"Ok({repr(self._value)})"
+
+    def __eq__(self, __o: Any) -> bool:
+        return isinstance(__o, Ok) and self._value == __o._value
 
     def err(self) -> None:
         return None
@@ -36,18 +42,29 @@ class Ok(Generic[T]):
 
 
 @final
-@dataclass(repr=False, eq=False, frozen=True, slots=True)
 class Err(Generic[E]):
-    _err: E
+
+    __slots__ = ("_error",)
+    __match_args__ = ("_error",)
+
+    def __init__(self, error: E) -> None:
+        self._error = error
 
     def __repr__(self) -> str:
-        return f"Err({repr(self._err)})"
+        return f"Err({repr(self._error)})"
+
+    def __eq__(self, __o: Any) -> bool:
+        return (
+            isinstance(__o, Err)
+            and type(__o._error) is type(self._error)
+            and __o._error.args == self._error.args
+        )
 
     def err(self) -> E:
-        return self._err
+        return self._error
 
     def unwrap(self) -> NoReturn:
-        raise self._err
+        raise self._error
 
     @overload
     def unwrap_or(self) -> None:
@@ -61,14 +78,7 @@ class Err(Generic[E]):
         return default
 
     def unwrap_or_else(self, op: Callable[[E], DefaultT]) -> DefaultT:
-        return op(self._err)
-
-    def __eq__(self, __o: Any) -> bool:
-        return (
-            type(__o) is Err
-            and type(__o._err) is type(self._err)
-            and __o._err.args == self._err.args
-        )
+        return op(self._error)
 
 
 Result = Ok[T] | Err[E]
