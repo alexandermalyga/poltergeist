@@ -2,11 +2,11 @@ import operator
 
 import pytest
 
-from poltergeist import Err, Ok, poltergeist
+from poltergeist import Err, Ok, catch
 
 
 def test_decorator() -> None:
-    decorated = poltergeist(ZeroDivisionError)(operator.truediv)
+    decorated = catch(ZeroDivisionError)(operator.truediv)
 
     assert decorated(4, 2) == Ok(2)
 
@@ -20,7 +20,7 @@ def test_decorator() -> None:
 
 def test_decorator_other_error() -> None:
     # Only catching instances of ValueError
-    decorated = poltergeist(ValueError)(operator.truediv)
+    decorated = catch(ValueError)(operator.truediv)
 
     assert decorated(4, 2) == Ok(2)
 
@@ -30,7 +30,7 @@ def test_decorator_other_error() -> None:
 
 
 def test_decorator_multiple_errors() -> None:
-    decorated = poltergeist(ZeroDivisionError, TypeError)(operator.truediv)
+    decorated = catch(ZeroDivisionError, TypeError)(operator.truediv)
 
     assert decorated(4, 2) == Ok(2)
 

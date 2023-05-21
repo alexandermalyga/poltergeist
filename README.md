@@ -13,13 +13,13 @@ pip install poltergeist
 
 ## Examples
 
-Use the `@poltergeist` decorator on any function:
+Use the `@catch` decorator on any function:
 
 ```python
-from poltergeist import poltergeist
+from poltergeist import catch
 
 # Handle an exception type potentially raised within the function
-@poltergeist(OSError)
+@catch(OSError)
 def read_text(path: str) -> str:
     with open(path) as f:
         return f.read()
@@ -69,7 +69,7 @@ match result:
 It's also possible to wrap multiple exception types with the decorator:
 
 ```python
-@poltergeist(OSError, UnicodeDecodeError)
+@catch(OSError, UnicodeDecodeError)
 def read_text(path: str) -> str:
     with open(path) as f:
         return f.read()

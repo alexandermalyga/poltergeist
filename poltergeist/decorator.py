@@ -6,7 +6,7 @@ from poltergeist.result import E, Err, Ok, Result, T
 P = ParamSpec("P")
 
 
-def poltergeist(
+def catch(
     *errors: Type[E],
 ) -> Callable[[Callable[P, T]], Callable[P, Result[T, E]]]:
     def decorator(func: Callable[P, T]) -> Callable[P, Result[T, E]]:
