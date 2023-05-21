@@ -1,39 +1,27 @@
-- case: decorator_no_args
+- case: decorator_single_error
   main: |
     from poltergeist import poltergeist, Result
 
-    @poltergeist
-    def test(a: int, b: str) -> float | None: ...
-
-    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[builtins.Exception]]"
-
-- case: decorator_default
-  main: |
-    from poltergeist import poltergeist, Result
-
-    @poltergeist()
-    def test(a: int, b: str) -> float | None: ...
-
-    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[builtins.Exception]]"
-
-- case: decorator_with_args
-  main: |
-    from poltergeist import poltergeist, Result
-
-    @poltergeist(error=ValueError)
+    @poltergeist(ValueError)
     def test(a: int, b: str) -> float | None: ...
 
     reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[builtins.ValueError]]"
+
+- case: decorator_multiple_errors
+  skip: True  # TODO: Enable this test once MyPy properly detects the return type
+  main: |
+    from poltergeist import poltergeist, Result
+
+    @poltergeist(ValueError, TypeError)
+    def test(a: int, b: str) -> float | None: ...
+
+    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[Union[builtins.ValueError, builtins.TypeError]]]"
 
 - case: decorator_invalid_error_type
   main: |
     from poltergeist import poltergeist, Result
 
-    @poltergeist(error=123)
+    @poltergeist(123)
     def test(a: int, b: str) -> float | None: ...
   out: |
-    main:3: error: No overload variant of "poltergeist" matches argument type "int"  [call-overload]
-    main:3: note: Possible overload variants:
-    main:3: note:     def [P`-1, T] poltergeist(Callable[P, T], /) -> Callable[P, Union[Ok[T], Err[Exception]]]
-    main:3: note:     def poltergeist() -> Callable[[Callable[P, T]], Callable[P, Union[Ok[T], Err[Exception]]]]
-    main:3: note:     def [E <: BaseException] poltergeist(*, error: Type[E]) -> Callable[[Callable[P, T]], Callable[P, Union[Ok[T], Err[E]]]]
+    main:3: error: Argument 1 to "poltergeist" has incompatible type "int"; expected "Type[<nothing>]"  [arg-type]

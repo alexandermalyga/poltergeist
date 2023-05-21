@@ -18,9 +18,8 @@ Use the `@poltergeist` decorator on any function:
 ```python
 from poltergeist import poltergeist
 
-# Handle an exception type potentially raised
-# within the function (Exception by default)
-@poltergeist(error=OSError)
+# Handle an exception type potentially raised within the function
+@poltergeist(OSError)
 def read_text(path: str) -> str:
     with open(path) as f:
         return f.read()
@@ -40,17 +39,6 @@ def read_text(path: str) -> Result[str, OSError]:
         with open(path) as f:
             return Ok(f.read())
     except OSError as e:
-        return Err(e)
-```
-
-It's also possible to wrap multiple exception types:
-
-```python
-def read_text(path: str) -> Result[str, OSError | UnicodeDecodeError]:
-    try:
-        with open(path) as f:
-            return Ok(f.read())
-    except (OSError, UnicodeDecodeError) as e:
         return Err(e)
 ```
 
@@ -76,6 +64,26 @@ match result:
         print("Text in upper:", content.upper())
     case Err(FileNotFoundError() as e):
         print("File not found:", e.filename)
+```
+
+It's also possible to wrap multiple exception types with the decorator:
+
+```python
+@poltergeist(OSError, UnicodeDecodeError)
+def read_text(path: str) -> str:
+    with open(path) as f:
+        return f.read()
+```
+
+Or manually:
+
+```python
+def read_text(path: str) -> Result[str, OSError | UnicodeDecodeError]:
+    try:
+        with open(path) as f:
+            return Ok(f.read())
+    except (OSError, UnicodeDecodeError) as e:
+        return Err(e)
 ```
 
 ## Contributing
