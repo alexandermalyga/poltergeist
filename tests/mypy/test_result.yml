@@ -3,7 +3,7 @@
     from poltergeist import Result, Ok, Err
     ok: Result[str, Exception] = Ok(123)  # E: Argument 1 to "Ok" has incompatible type "int"; expected "str"  [arg-type]
     err: Result[str, Exception] = Err(123)  # E: Argument 1 to "Err" has incompatible type "int"; expected "Exception"  [arg-type]
-    other: Result[str, int]  # E: Type argument "int" of "Err" must be a subtype of "BaseException"  [type-var]
+    other: Result[str, int]  # E: Type argument "int" of "Result" must be a subtype of "BaseException"  [type-var]
 
 - case: result_err
   main: |

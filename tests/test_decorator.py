@@ -2,11 +2,11 @@ import operator
 
 import pytest
 
-from poltergeist import Err, Ok, poltergeist
+from poltergeist import Err, Ok, catch
 
 
 def test_decorator() -> None:
-    decorated = poltergeist(error=ZeroDivisionError)(operator.truediv)
+    decorated = catch(ZeroDivisionError)(operator.truediv)
 
     assert decorated(4, 2) == Ok(2)
 
@@ -20,7 +20,7 @@ def test_decorator() -> None:
 
 def test_decorator_other_error() -> None:
     # Only catching instances of ValueError
-    decorated = poltergeist(error=ValueError)(operator.truediv)
+    decorated = catch(ValueError)(operator.truediv)
 
     assert decorated(4, 2) == Ok(2)
 
@@ -29,8 +29,8 @@ def test_decorator_other_error() -> None:
         decorated(4, 0)
 
 
-def test_decorator_default_error() -> None:
-    decorated = poltergeist()(operator.truediv)
+def test_decorator_multiple_errors() -> None:
+    decorated = catch(ZeroDivisionError, TypeError)(operator.truediv)
 
     assert decorated(4, 2) == Ok(2)
 
@@ -41,15 +41,9 @@ def test_decorator_default_error() -> None:
         case _:
             pytest.fail("Should have been Err")
 
-
-def test_decorator_default_error_no_args() -> None:
-    decorated = poltergeist(operator.truediv)
-
-    assert decorated(4, 2) == Ok(2)
-
-    match decorated(4, 0):
+    match decorated("4", 0):
         case Err(e):
-            assert type(e) == ZeroDivisionError
-            assert e.args == ("division by zero",)
+            assert type(e) == TypeError
+            assert e.args == ("unsupported operand type(s) for /: 'str' and 'int'",)
         case _:
             pytest.fail("Should have been Err")
