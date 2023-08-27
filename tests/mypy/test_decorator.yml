@@ -24,4 +24,4 @@
     @catch(123)
     def test(a: int, b: str) -> float | None: ...
   out: |
-    main:3: error: Argument 1 to "catch" has incompatible type "int"; expected "Type[<nothing>]"  [arg-type]
+    main:3: error: Argument 1 to "catch" has incompatible type "int"; expected "type[<nothing>]"  [arg-type]
