@@ -27,6 +27,7 @@ black = "^22.10.0"
 isort = "^5.10.1"
 pytest-mypy-plugins = "^1.10.1"
 pytest-cov = "^4.0.0"
+pytest-asyncio = "^0.21.1"
 
 [tool.mypy]
 strict = true
@@ -39,6 +40,9 @@ profile = "black"
 
 [tool.coverage.report]
 exclude_lines = ["pragma: not covered", "@overload"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
 
 [build-system]
 requires = ["poetry-core"]
