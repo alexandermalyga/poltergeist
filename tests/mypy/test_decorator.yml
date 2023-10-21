@@ -24,4 +24,51 @@
     @catch(123)
     def test(a: int, b: str) -> float | None: ...
   out: |
-    main:3: error: Argument 1 to "catch" has incompatible type "int"; expected "Type[<nothing>]"  [arg-type]
+    main:3: error: Argument 1 to "catch" has incompatible type "int"; expected "type[<nothing>]"  [arg-type]
+
+- case: decorator_with_async_function
+  main: |
+    from poltergeist import catch, Result
+
+    @catch(ValueError)
+    async def test(a: int, b: str) -> float | None: ...
+
+    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> Union[poltergeist.result.Ok[typing.Coroutine[Any, Any, Union[builtins.float, None]]], poltergeist.result.Err[builtins.ValueError]]"
+
+- case: async_decorator_single_error
+  main: |
+    from poltergeist import catch_async, Result
+
+    @catch_async(ValueError)
+    async def test(a: int, b: str) -> float | None: ...
+
+    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> typing.Awaitable[Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[builtins.ValueError]]]"
+
+- case: async_decorator_multiple_errors
+  skip: True  # TODO: Enable this test once MyPy properly detects the return type
+  main: |
+    from poltergeist import catch_async, Result
+
+    @catch_async(ValueError, TypeError)
+    async def test(a: int, b: str) -> float | None: ...
+
+    reveal_type(test)  # N: Revealed type is "def (a: builtins.int, b: builtins.str) -> typing.Awaitable[Union[poltergeist.result.Ok[Union[builtins.float, None]], poltergeist.result.Err[Union[builtins.ValueError, builtins.TypeError]]]]"
+
+- case: async_decorator_invalid_error_type
+  main: |
+    from poltergeist import catch_async, Result
+
+    @catch_async(123)
+    async def test(a: int, b: str) -> float | None: ...
+  out: |
+    main:3: error: Argument 1 to "catch_async" has incompatible type "int"; expected "type[<nothing>]"  [arg-type]
+
+
+- case: async_decorator_with_sync_function
+  main: |
+    from poltergeist import catch_async, Result
+
+    @catch_async(Exception)
+    def test(a: int, b: str) -> float | None: ...
+  out: |
+    main:3: error: Argument 1 has incompatible type "Callable[[int, str], float | None]"; expected "Callable[[int, str], Awaitable[<nothing>]]"  [arg-type]

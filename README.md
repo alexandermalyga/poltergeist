@@ -86,6 +86,20 @@ def read_text(path: str) -> Result[str, OSError | UnicodeDecodeError]:
         return Err(e)
 ```
 
+There is also an async-compatible decorator:
+
+```python
+from poltergeist import catch_async
+
+@catch_async(OSError)
+async def read_text(path: str) -> str:
+    with open(path) as f:
+        return f.read()
+
+# Returns an object of type Result[str, OSError]
+result = await read_text("my_file.txt")
+```
+
 ## Contributing
 
 Set up the project using [Poetry](https://python-poetry.org/):

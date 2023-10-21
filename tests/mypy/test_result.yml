@@ -30,5 +30,5 @@
     from poltergeist import Result
     instance: Result[str, Exception]
     reveal_type(instance.unwrap_or_else(lambda e: e))  # N: Revealed type is "Union[builtins.str, builtins.Exception]"
-    default: str = instance.unwrap_or_else(lambda e: e)  # E: Incompatible types in assignment (expression has type "Union[str, Exception]", variable has type "str")  [assignment]
+    default: str = instance.unwrap_or_else(lambda e: e)  # E: Incompatible types in assignment (expression has type "str | Exception", variable has type "str")  [assignment]
     instance.unwrap_or_else(123)  # E: Argument 1 to "unwrap_or_else" of "Err" has incompatible type "int"; expected "Callable[[Exception], <nothing>]"  [arg-type]
