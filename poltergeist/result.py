@@ -7,7 +7,6 @@ DefaultT = TypeVar("DefaultT")
 
 @final
 class Ok(Generic[T]):
-
     __slots__ = ("_value",)
     __match_args__ = ("_value",)
 
@@ -43,7 +42,6 @@ class Ok(Generic[T]):
 
 @final
 class Err(Generic[E]):
-
     __slots__ = ("_error",)
     __match_args__ = ("_error",)
 
