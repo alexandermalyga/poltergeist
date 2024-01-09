@@ -30,7 +30,7 @@ class Ok(Generic[T]):
         ...
 
     @overload
-    def unwrap_or(self, default: DefaultT) -> T:
+    def unwrap_or(self, default: Any) -> T:
         ...
 
     def unwrap_or(self, default: Any = None) -> Any:
