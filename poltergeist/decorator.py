@@ -1,18 +1,20 @@
 import functools
 from collections.abc import Awaitable
-from typing import Callable, ParamSpec
+from typing import Callable, ParamSpec, TypeVar
 
-from poltergeist.result import E, Err, Ok, Result, T
+from poltergeist.result import Err, Ok, Result
 
-P = ParamSpec("P")
+_T = TypeVar("_T")
+_E = TypeVar("_E", bound=BaseException)
+_P = ParamSpec("_P")
 
 
 def catch(
-    *errors: type[E],
-) -> Callable[[Callable[P, T]], Callable[P, Result[T, E]]]:
-    def decorator(func: Callable[P, T]) -> Callable[P, Result[T, E]]:
+    *errors: type[_E],
+) -> Callable[[Callable[_P, _T]], Callable[_P, Result[_T, _E]]]:
+    def decorator(func: Callable[_P, _T]) -> Callable[_P, Result[_T, _E]]:
         @functools.wraps(func)
-        def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T, E]:
+        def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> Result[_T, _E]:
             try:
                 result = func(*args, **kwargs)
             except errors as e:
@@ -25,13 +27,13 @@ def catch(
 
 
 def catch_async(
-    *errors: type[E],
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[Result[T, E]]]]:
+    *errors: type[_E],
+) -> Callable[[Callable[_P, Awaitable[_T]]], Callable[_P, Awaitable[Result[_T, _E]]]]:
     def decorator(
-        func: Callable[P, Awaitable[T]]
-    ) -> Callable[P, Awaitable[Result[T, E]]]:
+        func: Callable[_P, Awaitable[_T]]
+    ) -> Callable[_P, Awaitable[Result[_T, _E]]]:
         @functools.wraps(func)
-        async def wrapper(*args: P.args, **kwargs: P.kwargs) -> Result[T, E]:
+        async def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> Result[_T, _E]:
             try:
                 result = await func(*args, **kwargs)
             except errors as e:

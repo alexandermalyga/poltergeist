@@ -1,16 +1,16 @@
 from typing import Any, Callable, Generic, NoReturn, TypeVar, final, overload
 
-T = TypeVar("T")
-E = TypeVar("E", bound=BaseException)
-DefaultT = TypeVar("DefaultT")
+_T = TypeVar("_T")
+_E = TypeVar("_E", bound=BaseException)
+_D = TypeVar("_D")
 
 
 @final
-class Ok(Generic[T]):
+class Ok(Generic[_T]):
     __slots__ = ("_value",)
     __match_args__ = ("_value",)
 
-    def __init__(self, value: T) -> None:
+    def __init__(self, value: _T) -> None:
         self._value = value
 
     def __repr__(self) -> str:
@@ -22,30 +22,30 @@ class Ok(Generic[T]):
     def err(self) -> None:
         return None
 
-    def unwrap(self) -> T:
+    def unwrap(self) -> _T:
         return self._value
 
     @overload
-    def unwrap_or(self) -> T:
+    def unwrap_or(self) -> _T:
         ...
 
     @overload
-    def unwrap_or(self, default: Any) -> T:
+    def unwrap_or(self, default: Any) -> _T:
         ...
 
     def unwrap_or(self, default: Any = None) -> Any:
         return self.unwrap()
 
-    def unwrap_or_else(self, op: Any) -> T:
+    def unwrap_or_else(self, op: Any) -> _T:
         return self.unwrap()
 
 
 @final
-class Err(Generic[E]):
+class Err(Generic[_E]):
     __slots__ = ("_error",)
     __match_args__ = ("_error",)
 
-    def __init__(self, error: E) -> None:
+    def __init__(self, error: _E) -> None:
         self._error = error
 
     def __repr__(self) -> str:
@@ -58,7 +58,7 @@ class Err(Generic[E]):
             and __o._error.args == self._error.args
         )
 
-    def err(self) -> E:
+    def err(self) -> _E:
         return self._error
 
     def unwrap(self) -> NoReturn:
@@ -69,14 +69,14 @@ class Err(Generic[E]):
         ...
 
     @overload
-    def unwrap_or(self, default: DefaultT) -> DefaultT:
+    def unwrap_or(self, default: _D) -> _D:
         ...
 
     def unwrap_or(self, default: Any = None) -> Any:
         return default
 
-    def unwrap_or_else(self, op: Callable[[E], DefaultT]) -> DefaultT:
+    def unwrap_or_else(self, op: Callable[[_E], _D]) -> _D:
         return op(self._error)
 
 
-Result = Ok[T] | Err[E]
+Result = Ok[_T] | Err[_E]
