@@ -24,7 +24,7 @@
     @catch(123)
     def test(a: int, b: str) -> float | None: ...
   out: |
-    main:3: error: Argument 1 to "catch" has incompatible type "int"; expected "type[<nothing>]"  [arg-type]
+    main:3: error: Argument 1 to "catch" has incompatible type "int"; expected "type[Never]"  [arg-type]
 
 - case: decorator_with_async_function
   main: |
@@ -61,7 +61,7 @@
     @catch_async(123)
     async def test(a: int, b: str) -> float | None: ...
   out: |
-    main:3: error: Argument 1 to "catch_async" has incompatible type "int"; expected "type[<nothing>]"  [arg-type]
+    main:3: error: Argument 1 to "catch_async" has incompatible type "int"; expected "type[Never]"  [arg-type]
 
 
 - case: async_decorator_with_sync_function
@@ -71,4 +71,4 @@
     @catch_async(Exception)
     def test(a: int, b: str) -> float | None: ...
   out: |
-    main:3: error: Argument 1 has incompatible type "Callable[[int, str], float | None]"; expected "Callable[[int, str], Awaitable[<nothing>]]"  [arg-type]
+    main:3: error: Argument 1 has incompatible type "Callable[[int, str], float | None]"; expected "Callable[[int, str], Awaitable[Never]]"  [arg-type]

@@ -14,7 +14,7 @@
   main: |
     from poltergeist import Err
     instance: Err[Exception]
-    reveal_type(instance.unwrap())  # N: Revealed type is "<nothing>"
+    reveal_type(instance.unwrap())  # N: Revealed type is "Never"
 
 - case: err_unwrap_or
   main: |
@@ -29,5 +29,5 @@
     from poltergeist import Err
     instance: Err[Exception]
     reveal_type(instance.unwrap_or_else(lambda e: e))  # N: Revealed type is "builtins.Exception"
-    instance.unwrap_or_else(123)  # E: Argument 1 to "unwrap_or_else" of "Err" has incompatible type "int"; expected "Callable[[Exception], <nothing>]"  [arg-type]
+    instance.unwrap_or_else(123)  # E: Argument 1 to "unwrap_or_else" of "Err" has incompatible type "int"; expected "Callable[[Exception], Never]"  [arg-type]
     default: str = instance.unwrap_or_else(lambda e: e)  # E: Incompatible types in assignment (expression has type "Exception", variable has type "str")  [assignment]
