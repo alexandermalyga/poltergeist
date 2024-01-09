@@ -1,6 +1,6 @@
 import pytest
 
-from poltergeist import Err, Ok, Result
+from poltergeist import Err, Ok
 
 
 def test_ok() -> None:
