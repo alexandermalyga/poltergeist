@@ -42,27 +42,27 @@ class Ok(Generic[_T]):
 
 @final
 class Err(Generic[_E]):
-    __slots__ = ("_error",)
-    __match_args__ = ("_error",)
+    __slots__ = ("_value",)
+    __match_args__ = ("_value",)
 
-    def __init__(self, error: _E) -> None:
-        self._error = error
+    def __init__(self, value: _E) -> None:
+        self._value = value
 
     def __repr__(self) -> str:
-        return f"Err({repr(self._error)})"
+        return f"Err({repr(self._value)})"
 
     def __eq__(self, __o: Any) -> bool:
         return (
             isinstance(__o, Err)
-            and type(__o._error) is type(self._error)
-            and __o._error.args == self._error.args
+            and type(__o._value) is type(self._value)
+            and __o._value.args == self._value.args
         )
 
     def err(self) -> _E:
-        return self._error
+        return self._value
 
     def unwrap(self) -> NoReturn:
-        raise self._error
+        raise self._value
 
     @overload
     def unwrap_or(self) -> None:
@@ -76,7 +76,7 @@ class Err(Generic[_E]):
         return default
 
     def unwrap_or_else(self, op: Callable[[_E], _D]) -> _D:
-        return op(self._error)
+        return op(self._value)
 
 
 Result = Ok[_T] | Err[_E]
