@@ -1,6 +1,6 @@
 import functools
 from collections.abc import Awaitable
-from typing import Callable, ParamSpec, Type
+from typing import Callable, ParamSpec
 
 from poltergeist.result import E, Err, Ok, Result, T
 
@@ -8,7 +8,7 @@ P = ParamSpec("P")
 
 
 def catch(
-    *errors: Type[E],
+    *errors: type[E],
 ) -> Callable[[Callable[P, T]], Callable[P, Result[T, E]]]:
     def decorator(func: Callable[P, T]) -> Callable[P, Result[T, E]]:
         @functools.wraps(func)
@@ -25,7 +25,7 @@ def catch(
 
 
 def catch_async(
-    *errors: Type[E],
+    *errors: type[E],
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[Result[T, E]]]]:
     def decorator(
         func: Callable[P, Awaitable[T]]
