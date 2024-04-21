@@ -5,6 +5,23 @@
     err: Result[str, Exception] = Err(123)  # E: Argument 1 to "Err" has incompatible type "int"; expected "Exception"  [arg-type]
     other: Result[str, int]  # E: Type argument "int" of "Result" must be a subtype of "BaseException"  [type-var]
 
+- case: result_generic_covariant
+  main: |
+    from abc import ABC, abstractmethod
+    from typing import Any, Generic, TypeVar
+    from poltergeist import Err, Result
+
+    FooT = TypeVar("FooT", bound=Result[Any, Exception])
+
+    class Foo(Generic[FooT], ABC):
+        @abstractmethod
+        def run(self) -> FooT:
+            ...
+
+    class Bar(Foo[Result[Any, ValueError]]):
+        def run(self) -> Result[Any, ValueError]:
+            return Err(ValueError(""))
+
 - case: result_err
   main: |
     from poltergeist import Result

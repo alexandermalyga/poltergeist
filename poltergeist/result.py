@@ -1,7 +1,7 @@
 from typing import Any, Callable, Generic, NoReturn, TypeVar, final, overload
 
-_T = TypeVar("_T")
-_E = TypeVar("_E", bound=BaseException)
+_T = TypeVar("_T", covariant=True)
+_E = TypeVar("_E", bound=BaseException, covariant=True)
 _D = TypeVar("_D")
 
 
